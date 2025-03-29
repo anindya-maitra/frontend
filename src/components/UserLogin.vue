@@ -58,16 +58,15 @@ export default {
           password: this.password,
         });
 
-        this.responseMessage = response.data.Message;
-        this.responseClass = response.data.status === "200" ? "text-success" : "text-danger";
-
         if (response.data.status === "200") {
-          setTimeout(() => {
-            alert("Login Successful!");
-            this.$router.push("/user/dashboard")
-            // Redirect to another page if needed
-            // this.$router.push("/dashboard");
-          }, 5);
+          // Store user data in localStorage
+          localStorage.setItem("user", JSON.stringify(response.data.user));
+
+          // Redirect to user dashboard with userId as a URL param
+          this.$router.push(`/user/dashboard/${response.data.user.id}`);
+        } else {
+          this.responseMessage = response.data.Message;
+          this.responseClass = "text-danger";
         }
       } catch (error) {
         this.responseMessage = "An error occurred!";
